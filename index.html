@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Car</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div class="background">
+  <div class="heading">
+    <h1 style="font-size:100px; color:white; margin:10px;">PARK YOUR CAR</h1>
+    <p style="font-size:30px; color: white;"><span style = "color:#C3073F;">TIME</span>LESSLY. HASSLE <span style = "color:#C3073F;">FREE</span>.
+  </div>
+  <div class = "keys">
+    <div class = "key" id = "book">Book a parking</div>
+    <div class = "key" id = "reg">Register parking space</div>
+  </div>
+  <div class = "registercard">
+    <div class = "title">REGISTER</div>
+    <form>
+        <input id="name" type = "text" placeholder = "John Doe" required />
+
+        <input id="email" type = "email" placeholder = "doejohn123@ambiencemalls.org" required />
+
+        <input id="location" type = "text" placeholder = "Ambience Mall, Level-1" required />
+        <input id="slotprice" type = "number" placeholder = "₹ 50" required />
+
+        <span><input id="length" style = "width: 33%;" type = "number" placeholder = "Length (mts)" required />X<input id="breadth" style = "width: 33%;"type = "number" placeholder = "Breath (mts)" required /></span>
+        <button id = "continue">CONTINUE</button>
+    </form>
+  </div>
+</div>
+<script>
+    function generateOTP(){
+        return Math.floor(Math.random() * (9999 -  + 1000) ) + 1000;
+    }
+    const book = document.querySelector('#book');
+    const register = document.querySelector('#reg');
+    const formData = document.querySelectorAll('input');
+    register.addEventListener("click", (e) => {
+        document.querySelector('.keys').style.display = "none";
+        const registercard = document.querySelector('.registercard');
+        const heading = document.querySelector('.heading');
+        registercard.classList.add('visiblecard');
+        heading.classList.add('headingside');
+
+    });
+    book.addEventListener("click", (e) => {
+        window.location.href = "book.html";
+    });
+    const nextpage = document.querySelector("#continue");
+    nextpage.addEventListener('click', e => {
+        if ([...formData].map((item) => item.validity.valid).reduce((total, current) => total + current, 0) != 6) return;
+        e.preventDefault();
+        formData.forEach(x => {
+            window.sessionStorage.setItem(x.id, x.value);
+        });
+        window.location.href = "register.html";
+});
+
+
+
+    /*getotp.addEventListener("click", (e) => {
+        const url = 'https://api.emailjs.com/api/v1.0/email/send';
+        var data = {
+        service_id: 'service_9ngogzi',
+        template_id: 'contact_form',
+        user_id: 'user_AxM0nnFgAEPnXLy9ET5tI',
+        template_params: {
+            'from_name': 'ParkYourCar',
+            'to_name': formData['name'].value,
+            'message': generateOTP(),
+            'reply_to': formData['email'].value
+            }
+        };
+
+    $.ajax(url, {
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json'
+    })
+        .done((res) => console.log(JSON.stringify(res)))
+        .fail((error) => console.log(JSON.stringify(error)))
+    });
+    */
+</script>
+</body>
+</html>
