@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
+    <script src = "firebase.js"></script>
+
+<style>
+body,html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow : hidden;
+  background-image: url("book.jpeg");
+  background-position: center;
+  background-size: cover;
+  font-family: "comic sans ms";
+}
+.titleh1 {
+    position: absolute;
+    top: 21%;
+    left: 37%;
+    font-size: 50px;
+    color: white;
+}
+form {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.formbox {
+    background-color: rgba(40,40,40, 0.6);
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    width: 70%;
+    height: 18%;
+    z-index: 2;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+    font-family: "comic sans ms";
+    border-radius: 30px;
+    box-shadow: 3px 5px 10px rgba(0,0,0,1);
+}
+.gridbox {
+    background-color: rgba(88,88,88, 0.2);
+    color: white;
+    position: absolute;
+    top: 150%;
+    left: 36%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    margin-left: 10px;
+    display: grid;
+    height: 80%;
+    overflow: scroll;
+    text-align: justify;
+    justify-content: center;
+    font-size: 13px;
+}
+.sidebox {
+    background-color: rgba(88,88,88, 0.2);
+    position: absolute;
+    top: 150%;
+    left: 85%;
+    transform: translate(-50%, -50%);
+    width: 25%;
+    margin-left: 10px;
+    padding: 5px;;
+    margin-bottom: 10px;
+    height: 80%;
+    color: white;
+    border-radius: 10px;
+    font-size: 25px;
+    text-align: center;
+    overflow: hidden;
+    box-shadow: 3px 5px 10px rgba(0,0,0,1);
+}
+.costbox {
+    background-color: rgba(0,0,0, 0.3);
+    position: absolute;
+    top: 63%;
+    left: 150%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    height: 60%;
+    color: white;
+    border-radius: 10px;
+    transition: all 0.5s ease;
+}
+.costdetails{
+    display: flex;
+    margin: 10px;
+}
+.costpara {
+    width:70%;
+    height: auto;
+    color: white;
+    font-size:20px;
+    text-align: left;
+}
+.costparavalue{
+    width:auto;
+    height: auto;
+    color: white;
+    font-size:20px;
+    text-align: right;
+}
+.costbox button{
+    transition: all 0.2s ease;
+    border: none;
+    outline: none;
+    margin: 20px;
+    font-size: 17px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    width: 50%;
+    height: 50px;
+    border-radius: 22px;
+    font-family: inherit;
+}
+.costbox button:hover{
+    border: .2rem solid #F4BB44;
+    transform: scale(1.15);
+    box-shadow: 0 0 1rem #ffc600;
+}
+.costboxmove{
+    left: 47%;
+    transition: all 0.7s ease;
+}
+.gridboxmove {
+    top: 55%;
+    transition: all 0.7s ease;
+}
+.movebox {
+    top: 7%;
+    border-radius: 20px;
+    height: 10%;
+    transition: all 0.7s ease;
+}
+
+.title{
+    font-size: 40px;
+    margin:0 0 40px 0;
+    color: white;
+}
+
+input{
+    transition: all 0.2s ease;
+    border:none;
+    outline: none;
+    padding-left: 15px;
+    font-size: 15px;
+    margin: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    color:white;
+    width: 320px;
+    height: 45px;
+}
+input:focus{
+    transform: scale(1.2);
+    border-color: #F4BB44;
+}
+::placeholder {
+  color: white;
+  opacity: 0.7;
+}
+
+.formbox button{
+    transition: all 0.2s ease;
+    border: none;
+    outline: none;
+    margin: 20px;
+    font-size: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    width: 18%;
+    height: 50px;
+    border-radius: 22px;
+}
+.formbox button:hover{
+    border: .2rem solid #F4BB44;
+    transform: scale(1.15);
+    box-shadow: 0 0 1rem #ffc600;
+}
+.roadcell {
+    background-color: rgb(24,24,24);
+    border: 1px solid rgba(24,24,24,1);
+    color: white;
+    text-align: center;
+}
+.reservedcell{
+    background-color: rgba(136,136,136,1);
+    border: 1px solid rgba(136,136,136,1);
+    color: white;
+    text-align: center;
+    margin: 2px;
+    border-radius: 2px;
+}
+.bookedcell{
+    background-color: rgba(104,104,104,1);
+    border: 1px solid rgba(104,104,104,0.5);
+    color: white;
+    margin: 2px;
+    border-radius: 2px;
+}
+.parkablecell {
+    background-color: rgba(200,200,200,1);
+    border: 1px solid rgba(200,200,200,0.5);
+    color: white;
+    margin: 2px;
+    border-radius: 2px;
+}
+.cellselect {
+    background-color: #F4BB44;
+    border:1px solid black;
+    box-shadow: 0 0 4px #ffc600;
+    transform: scale(1.08);
+}
+.Loader{
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0, 0.7);
+    z-index: 2;
+    display: none;
+}
+.loading {
+    border-radius: 15%;
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    top: 45%;
+    left:50%;
+    position: absolute;
+    -moz-animation: loader infinite 1.5s;
+    animation: loader infinite 1.5s;
+    background-size: contain;
+}
+@-moz-keyframes loader {
+    0%,
+    100% {
+        box-shadow: 12px 12px #f1c40f, -12px 12px rgba(241, 196, 15, 0.5), -12px -12px #f1c40f, 12px -12px rgba(241, 196, 15, 0.5);
+    }
+    25% {
+        box-shadow: -12px 12px #f1c40f, -12px -12px rgba(241, 196, 15, 0.5), 12px -12px #f1c40f, 12px 12px rgba(241, 196, 15, 0.5);
+    }
+    50% {
+        box-shadow: -12px -12px #f1c40f, 12px -12px rgba(241, 196, 15, 0.5), 12px 12px #f1c40f, -12px 12px rgba(241, 196, 15, 0.5);
+    }
+    75% {
+        box-shadow: 12px -12px #f1c40f, 12px 12px rgba(241, 196, 15, 0.5), -12px 12px #f1c40f, -12px -12px rgba(241, 196, 15, 0.5);
+    }
+}
+@keyframes loader {
+    0%,
+    100% {
+        box-shadow: 12px 12px #f1c40f, -12px 12px rgba(241, 196, 15, 0.5), -12px -12px #f1c40f, 12px -12px rgba(241, 196, 15, 0.5);
+    }
+    25% {
+        box-shadow: -12px 12px #f1c40f, -12px -12px rgba(241, 196, 15, 0.5), 12px -12px #f1c40f, 12px 12px rgba(241, 196, 15, 0.5);
+    }
+    50% {
+        box-shadow: -12px -12px #f1c40f, 12px -12px rgba(241, 196, 15, 0.5), 12px 12px #f1c40f, -12px 12px rgba(241, 196, 15, 0.5);
+    }
+    75% {
+        box-shadow: 12px -12px #f1c40f, 12px 12px rgba(241, 196, 15, 0.5), -12px 12px #f1c40f, -12px -12px rgba(241, 196, 15, 0.5);
+    }
+}
+.suggestions {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  width: 45%;
+
+}
+
+.suggestions li {
+  height: 13px;
+  background: white;
+  list-style: none;
+  border-bottom: 1px solid #D8D8D8;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.14);
+  margin: 0;
+  padding: 20px;
+  transition: background 0.2s;
+  display: flex;
+  justify-content: space-between;
+  text-transform: capitalize;
+}
+
+.suggestions li:nth-child(even) {
+  transform: perspective(100px) rotateX(3deg) translateY(2px) scale(1.001);
+  background: linear-gradient(to bottom,  rgba(0,0,0, 0.2) 0%,rgba(0,0,0, 0.6) 100%);
+}
+
+.suggestions li:nth-child(odd) {
+  transform: perspective(100px) rotateX(-3deg) translateY(3px);
+  background: linear-gradient(to top,  rgba(0,0,0, 0.2) 0%,rgba(0,0,0, 0.6) 100%);
+}
+
+span.population {
+  font-size: 15px;
+}
+
+.hl {
+    color: #ffc600;
+}
+</style>
+<body>
+<h1 class = "titleh1">Book your slot.</h1>
+<div class = "formbox">
+  <form>
+      <div class = "hi">
+      <input id="location" type = "text" placeholder = "Enter Location" required />
+        <ul class="suggestions">
+        </ul>
+    </div>
+      <input style = "width: 230px;" id="numberofslots" type = "number" placeholder = "Number of Slots" min="1" required />
+
+  <button id = "next" type = "submit" data-state = "1";>NEXT</button>
+  </form>
+
+</div>
+
+<div class = "gridbox">
+    <div class="Loader">
+        <div class="loading"></div>
+    </div>
+</div>
+<div class = "sidebox">
+    <p>Please Select <span id = "remainingslots" style="color:red">3</span> more slots to continue.</p>
+    <p><span style = "color : red; font-size: 13px;"><sup>*</sup>GST Applicable : 18%(9% CGST + 9% SGST)</span></p>
+    <div class = "costbox">
+        <div class = "costdetails">
+            <div class="costpara">Slot Price</div>
+            <div id = 'slotprice' class = "costparavalue">₹ 150</div>
+        </div>
+        <div class = "costdetails">
+            <div class="costpara">Sub Total</div>
+            <div id = 'subtotal' class = "costparavalue">₹ 150</div>
+        </div>
+        <div class = "costdetails">
+            <div class="costpara">GST</div>
+            <div id = 'gst' class = "costparavalue">₹ 150</div>
+        </div>
+        <div class = "costdetails">
+            <div class="costpara">Service Charge</div>
+            <div id = 'convieniencefee' class = "costparavalue">₹ 150</div>
+        </div>
+        <br>
+        <hr color = #D22B2B style="margin: 0 30px 0 6px;">
+        <div class = "costdetails">
+            <div class="costpara">Amount Payable</div>
+            <div id = 'grandtotal' class = "costparavalue" style="color: #D22B2B;">₹ 150</div>
+        </div>
+        <button id = 'confirm'>CONFIRM</button>
+    </div>
+</div>
+<script>
+var numberOfRows;
+var numberOfColumns;
+var cellArray;
+var selectedSlots = [];
+var numberOfSlots;
+var pricePerSlot;
+var parkingGrid;
+var locationData;
+var locationsID;
+var modifiedParkingGrid;
+var selectedLocation;
+var currentSlots;
+var totalNumberOfSlots;
+const grid = document.querySelector(".gridbox");
+const sideBox = document.querySelector(".sidebox");
+const book = document.querySelector('#next');
+const formbox = document.querySelector('.formbox');
+const title = document.querySelector('.titleh1');
+const remainingSlots = document.querySelector('#remainingslots');
+const suggestions = document.querySelector('.suggestions');
+const locationSearchInput = document.querySelector('#location');
+const numberofslotsInput = document.querySelector('#numberofslots');
+
+const dateKey = `${new Date().getDate()}${new Date().getMonth() + 1}${new Date().getFullYear()}`;
+var concatcostsymbol = (cost) =>  '₹ ' + cost;
+
+function selectSlot(rn, cn){
+    let slot = cellArray[rn][cn]
+    slot.classList.toggle('cellselect');
+    modifiedParkingGrid[rn][cn] = 'CR';
+}
+function deselectSlot(rn, cn){
+    let slot = cellArray[rn][cn];
+    slot.classList.toggle('cellselect');
+    modifiedParkingGrid[rn][cn] = 'P';
+}
+function closeSuggestionBox(){
+    suggestions.innerHTML = '';
+}
+function compareLocations(a, b){
+    return a.replace(/[\s,]+/g,'').trim().toUpperCase() === b.replace(/[\s,]+/g,'').trim().toUpperCase();
+}
+function checklocationvalidity(str){
+    let place = locationData.find((l) => compareLocations(l, str))
+    if (!place) return false;
+    locationSearchInput.value = place;
+    numberofslotsInput.max = locationsID[place];
+    return true;
+}
+function hideCostBox(){
+    let costBox = document.querySelector('.costbox');
+    costBox.classList.remove('costboxmove');
+}
+function showCostBox(){
+    let costBox = document.querySelector('.costbox');
+    costBox.classList.add('costboxmove');
+}
+function removeLoader(){
+    window.location.replace("index.html");
+}
+function findMatches(expressionToMatch){
+    if (expressionToMatch == '') return [];
+    var rx = new RegExp(expressionToMatch, 'i');
+    return locationData.filter(obj => rx.test(obj));
+}
+function displayMatches() {
+    numberofslotsInput.placeholder = 'Number of Slots';
+    const matches = findMatches(this.value).slice(0,5);
+    const rx = new RegExp(this.value, 'gi');
+    const html = matches.map(obj => {
+        const place = obj.replace(rx, `<span class="hl">${this.value}</span>`);
+        return `
+            <li>
+            <span class="place">${place}</span>
+            <span class="slotnumber">${locationsID[obj]} Slots</span>
+            </li>`;
+    }).join('');
+  suggestions.innerHTML = html;
+}
+function computeCostValues(){
+    let subTotal = (pricePerSlot * numberOfSlots).toFixed(1);
+    let gst = (0.18 * subTotal).toFixed(1);
+    let serviceCharge = (0.10 * subTotal).toFixed(1);
+    let grandTotal = Math.ceil(parseFloat(subTotal) + parseFloat(gst) + parseFloat(serviceCharge));
+    let params = Array.from(document.querySelectorAll('.costparavalue'));
+    params[0].innerText = concatcostsymbol(pricePerSlot);
+    params[1].innerText = concatcostsymbol(subTotal);
+    params[2].innerText = concatcostsymbol(gst);
+    params[3].innerText = concatcostsymbol(serviceCharge);
+    params[4].innerText = concatcostsymbol(grandTotal);
+}
+function createGrid(container){
+    for (let i = 0; i < numberOfRows; i++){
+        for (let j = 0; j < numberOfColumns; j++){
+            let cell = document.createElement("div");
+            cell.className = "cell"
+            if (parkingGrid[i][j] == 'P')  cell.classList.add("parkablecell");
+            else if (parkingGrid[i][j] == 'X') cell.classList.add("reservedcell");
+            else if (parkingGrid[i][j] == 'B') cell.classList.add("bookedcell");
+            else {
+                if(parkingGrid[i][j] != 'R') cell.innerText = parkingGrid[i][j];
+                cell.classList.add("roadcell");
+            }
+            cell.dataset.rownumber = i;
+            cell.dataset.columnnumber = j;
+            container.appendChild(cell);
+        }
+    }
+}
+function clearGrid(){
+    grid.innerHTML = `<div class="Loader">
+                        <div class="loading"></div>
+                    </div>`;
+}
+function displayParkingGrid(snapshot){
+    const locationObject = snapshot.val();
+    pricePerSlot = locationObject.slotPrice; // should be integer
+    let currentParkingGrid = locationObject[`${dateKey}`];
+    if (currentParkingGrid) {
+        parkingGrid = JSON.parse(currentParkingGrid.currentParkingState);
+        currentSlots = currentParkingGrid.emptySlots;
+    }
+    else {
+        parkingGrid =  JSON.parse(locationObject.baseParkingModel);
+        currentSlots = locationObject.baseSlotNumber;
+    }
+    modifiedParkingGrid = [...parkingGrid];
+    numberOfRows = parkingGrid.length;
+    numberOfColumns = parkingGrid[0].length;
+    cellArray = new Array(numberOfRows).fill(0).map((x) => new Array(numberOfColumns));
+
+    var gridHeight = grid.clientHeight;
+    var gridWidth = grid.clientWidth;
+    let hb = gridHeight/numberOfRows;
+    let wb = gridWidth/numberOfColumns;
+    let container = document.querySelector(".gridbox");
+    container.style.gridTemplateColumns = `${wb}px repeat(${numberOfColumns - 1}, ${wb}px)`;
+    container.style.gridTemplateRows = `${hb}px repeat(${numberOfRows-1}, ${hb}px)`;
+    createGrid(container);
+    computeCostValues();
+
+    var cells = Array.from(container.querySelectorAll('.cell'));
+    cells.forEach((item, i) => {
+        cellArray[parseInt(i/numberOfColumns)][i%numberOfColumns] = item;
+    });
+}
+function isFormValid(){
+    if (!locationSearchInput.validity.valid) {
+        locationSearchInput.setCustomValidity('Atleast tell where you wanna park your car');
+        return false;
+    }
+    else if (!checklocationvalidity(locationSearchInput.value)) {
+        locationSearchInput.setCustomValidity('No location found');
+        return false;
+    }
+    else if (!numberofslotsInput.validity.valid){
+        let nos = numberofslotsInput.value;
+        if (nos < numberofslotsInput.min) numberofslotsInput.setCustomValidity('why you here then');
+        else if (nos > numberofslotsInput.max) numberofslotsInput.setCustomValidity('Somry! that much slots not available today');
+        return false;
+    }
+    return true;
+}
+window.addEventListener("load", () => {
+    const ref = db.ref('locationsID');
+    ref.once('value', (snapshot) => {
+      locationsID = snapshot.val();
+      locationData = Object.keys(locationsID);
+    });
+});
+
+locationSearchInput.addEventListener('keyup', displayMatches);
+document.querySelector('#confirm').addEventListener('click', ()=> {
+    selectedSlots.forEach((item) => {
+        modifiedParkingGrid[item[0]][item[1]] = 'B';
+    });
+    db.ref(`parkingLocations/${selectedLocation}/${dateKey}`).set({
+        currentParkingState : JSON.stringify(modifiedParkingGrid),
+        emptySlots : currentSlots - totalNumberOfSlots
+    })
+    db.ref(`locationsID/${selectedLocation}`).set(currentSlots - totalNumberOfSlots);
+    document.querySelector('.Loader').style.display = "block";
+    setTimeout(removeLoader, 1800);
+});
+
+suggestions.addEventListener('click', (e) => {
+    let selectedSuggestion = e.path.slice(-9, -8)[0].innerText.split('\n');
+    locationSearchInput.value = selectedSuggestion[0];
+    numberofslotsInput.value = '';
+    numberofslotsInput.max = selectedSuggestion[1].split(' ')[0];
+    numberofslotsInput.placeholder = ` ${selectedSuggestion[1].split(' ')[0]} Slots Available..`;
+    closeSuggestionBox();
+})
+
+book.addEventListener('click', (event) => {
+    locationSearchInput.setCustomValidity('');
+    numberofslotsInput.setCustomValidity('');
+    if (!isFormValid()) return;
+
+    closeSuggestionBox();
+    hideCostBox();
+    event.preventDefault();
+    remainingSlots.innerText = numberofslotsInput.value;
+    numberOfSlots = parseInt(remainingSlots.innerText);
+    totalNumberOfSlots = numberOfSlots;
+
+    if (book.dataset.state == 1){
+        formbox.classList.add('movebox');
+        title.style.display = "none";
+        book.innerHTML = 'UPDATE';
+        grid.classList.add('gridboxmove');
+        sideBox.classList.add('gridboxmove');
+        book.dataset.state = "2";
+    }
+    else{
+        clearGrid();
+        selectedSlots = [];
+    }
+    const ref = db.ref(`parkingLocations/${locationSearchInput.value}`)
+    selectedLocation = ref.key;
+    ref.once('value', displayParkingGrid);
+});
+
+grid.addEventListener('click', (e) => {
+    let rn = parseInt(e.target.dataset.rownumber);
+    let cn = parseInt(e.target.dataset.columnnumber);
+    if (Number.isNaN(rn)|| Number.isNaN(cn)) return;
+
+    if (modifiedParkingGrid[rn][cn] == 'P' && numberOfSlots){
+        selectSlot(rn, cn);
+        selectedSlots.push([rn, cn]);
+        remainingSlots.innerHTML = --numberOfSlots;
+        if (!numberOfSlots){
+            showCostBox();
+        }
+    }
+    else if (modifiedParkingGrid[rn][cn] == 'CR'){
+        deselectSlot(rn, cn);
+        selectedSlots = selectedSlots.filter(item => item != [rn, cn]);
+        remainingSlots.innerHTML = ++numberOfSlots;
+        if (numberOfSlots == 1){
+            hideCostBox();
+        }
+    }
+});
+
+
+</script>
+</body>
+</html>
