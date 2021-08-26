@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
+    <script src = "firebase.js"></script>
+<style>
+body,html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow : hidden;
+  background-image: url("book.jpeg");
+  background-position: center;
+  background-size: cover;
+  font-family: "comic sans ms";
+}
+.sidebox {
+    background-color: rgba(88,88,88, 0.2);
+    position: absolute;
+    top: 49%;
+    left: 85%;
+    transform: translate(-50%, -50%);
+    width: 25%;
+    margin-left: 10px;
+    padding: 5px;;
+    margin-bottom: 10px;
+    height: 92%;
+    color: white;
+    border-radius: 10px;
+    font-size: 25px;
+    text-align: center;
+    overflow: hidden;
+    box-shadow: 3px 5px 10px rgba(0,0,0,1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.statebox {
+    background-color: rgba(88,88,88, 0.4);
+    position: relative;
+    width: 100%;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    padding: 10px;
+    height: 15%;
+    color: white;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    font-size: 15px;
+    text-align: center;
+    text-transform: uppercase;
+}
+.statebox-done{
+    box-shadow: 0 0  10px #00A36C;
+    border: .15rem solid #00A36C;
+}
+.statebox p{
+    margin: 5%;
+}
+.statebox-enable{
+    transform: scale(1.08);
+    background-color: rgba(0,0,0, 0.6);
+    color: #F4BB44;
+}
+
+.final{
+    transition: all 0.2s ease;
+    border: none;
+    outline: none;
+    margin-left: 25%;
+    font-size: 17px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    width: 50%;
+    height: 8%;
+    border-radius: 22px;
+    font-family: inherit;
+}
+.final:hover:enabled{
+    border: .2rem solid #F4BB44;
+    transform: scale(1.15);
+    box-shadow: 0 0 0.8rem #ffc600;
+}
+.b {
+    transition: all 0.2s ease;
+    border: none;
+    outline: none;
+    margin: auto;
+    font-size: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    width: 30%;
+    height: 30%;
+    border-radius: 22px;
+    font-family: inherit;
+}
+.statebox-enable .b:hover{
+    border: .1rem solid #F4BB44;
+    transform: scale(1.1);
+    box-shadow: 0 0  #ffc600;
+}
+.gridbox {
+    background-color: rgba(88,88,88, 0.2);
+    color: white;
+    position: absolute;
+    top: 47%;
+    left: 36%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    margin-left: 10px;
+    display: grid;
+    height: 90%;
+    overflow: scroll;
+    text-align: justify;
+    justify-content: center;
+    font-size: 13px;
+}
+.area {
+    position: absolute;
+    top: 91%;
+    left: 20%;
+    color: white;
+}
+.roadcell {
+    background-color: rgb(40,40,40);
+    border: 1px solid rgba(40,40,40,1);
+    color: white;
+    text-align: center;
+}
+.reservedcell{
+    background-color: rgba(136,136,136,1);
+    border: 1px solid rgba(136,136,136,1);
+    color: white;
+    margin: 2px;
+    border-radius: 2px;
+}
+.bookedcell{
+    background-color: rgba(104,104,104,1);
+    border: 1px solid rgba(104,104,104,0.5);
+    color: white;
+    margin: 2px;
+    border-radius: 2px;
+}
+.parkablecell {
+    background-color: rgba(200,200,200,1);
+    border: 1px solid rgba(200,200,200,0.5);
+    color: white;
+    margin: 2px;
+    border-radius: 2px;
+}
+.cell{
+    background-color: rgba(169,169,169,1);
+    border: 1px solid rgba(0,0,0,0.5);
+}
+.cellselect{
+    background-color: rgba(104,104,104,1);
+    text-align: center;
+}
+.cellhover {
+    background-color: #F4BB44;
+    border:1px solid black;
+    box-shadow: 0 0 4px #ffc600;
+    transform: scale(1.08);
+}
+.Loader{
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0, 0.7);
+    z-index: 2;
+    display: none;
+}
+.loading {
+    border-radius: 15%;
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    top: 45%;
+    left:50%;
+    position: absolute;
+    -moz-animation: loader infinite 1.5s;
+    animation: loader infinite 1.5s;
+    background-size: contain;
+}
+@-moz-keyframes loader {
+    0%,
+    100% {
+        box-shadow: 12px 12px #f1c40f, -12px 12px rgba(241, 196, 15, 0.5), -12px -12px #f1c40f, 12px -12px rgba(241, 196, 15, 0.5);
+    }
+    25% {
+        box-shadow: -12px 12px #f1c40f, -12px -12px rgba(241, 196, 15, 0.5), 12px -12px #f1c40f, 12px 12px rgba(241, 196, 15, 0.5);
+    }
+    50% {
+        box-shadow: -12px -12px #f1c40f, 12px -12px rgba(241, 196, 15, 0.5), 12px 12px #f1c40f, -12px 12px rgba(241, 196, 15, 0.5);
+    }
+    75% {
+        box-shadow: 12px -12px #f1c40f, 12px 12px rgba(241, 196, 15, 0.5), -12px 12px #f1c40f, -12px -12px rgba(241, 196, 15, 0.5);
+    }
+}
+@keyframes loader {
+    0%,
+    100% {
+        box-shadow: 12px 12px #f1c40f, -12px 12px rgba(241, 196, 15, 0.5), -12px -12px #f1c40f, 12px -12px rgba(241, 196, 15, 0.5);
+    }
+    25% {
+        box-shadow: -12px 12px #f1c40f, -12px -12px rgba(241, 196, 15, 0.5), 12px -12px #f1c40f, 12px 12px rgba(241, 196, 15, 0.5);
+    }
+    50% {
+        box-shadow: -12px -12px #f1c40f, 12px -12px rgba(241, 196, 15, 0.5), 12px 12px #f1c40f, -12px 12px rgba(241, 196, 15, 0.5);
+    }
+    75% {
+        box-shadow: 12px -12px #f1c40f, 12px 12px rgba(241, 196, 15, 0.5), -12px 12px #f1c40f, -12px -12px rgba(241, 196, 15, 0.5);
+    }
+}
+</style>
+
+<body>
+<div class = "gridbox"><div class="Loader">
+                    <div class="loading"></div>
+                </div></div>
+<div class = "sidebox">
+    <div class="statebox statebox-entry statebox-enable"><p>Select Entrance</p><button class = "b b-entry">Done</button></div>
+    <div class="statebox statebox-exit"><p>Select Exit</p><button class = "b b-entry" disabled>Done</button></div>
+    <div class="statebox statebox-reserved"><p>Mark Reserved Spaces</p><button class = "b b-entry" disabled>Done</button></div>
+    <div class="statebox statebox-parkable"><p>Mark Parking Spaces</p><button class = "b b-entry" disabled>Done</button></div>
+    <button class = 'final' disabled>FINALISE</button>
+</div>
+
+<p class = "area"> Grid Size : 100 X 100 m<sup>2</sup>.</p>
+<script>
+const gridLength = window.sessionStorage.getItem('length') * 5;
+const gridBreadth = window.sessionStorage.getItem('breadth') * 5;
+const grid = document.querySelector(".gridbox");
+var gridHeight = grid.clientHeight;
+var gridWidth = grid.clientWidth;
+const numberOfRows = Math.floor(gridLength * 15 / gridHeight);
+const numberOfColumns =  Math.floor(gridBreadth * 20 / gridWidth);
+const hb = parseInt(gridHeight/numberOfRows);
+const wb = parseInt(gridWidth/numberOfColumns);
+var parkingGrid = new Array(numberOfRows).fill(0).map((x) => new Array(numberOfColumns));
+var cellArray;
+var newLocation;
+var newLocationInfo = {};
+var currentSelections = [];
+var currentState = 0;
+var clickedP = 0;
+var nrn, ncn;
+var baseslots = 0;
+window.addEventListener("load", () => {
+    document.querySelector('.area').innerHTML = ` Grid Size : ${window.sessionStorage.getItem('length')} X ${window.sessionStorage.getItem('breadth')} m<sup>2</sup>.`
+    newLocation = window.sessionStorage.getItem('location');
+    newLocationInfo.owner = window.sessionStorage.getItem('name');
+    newLocationInfo.email = window.sessionStorage.getItem('email');
+    newLocationInfo.slotPrice = window.sessionStorage.getItem('slotprice');
+
+    let container = document.querySelector(".gridbox");
+    container.style.gridTemplateColumns = `${wb}px repeat(${numberOfColumns - 1}, ${wb}px)`;
+    container.style.gridTemplateRows = `${hb}px repeat(${numberOfRows - 1}, ${hb}px)`;
+    for (let i = 0; i < numberOfRows; i++){
+        for (let j = 0; j < numberOfColumns; j++){
+            let cell = document.createElement("div");
+            cell.className = "cell";
+            cell.dataset.rownumber = i;
+            cell.dataset.columnnumber = j;
+            parkingGrid[i][j] = 'A';
+            container.appendChild(cell);
+        }
+    }
+
+    cellArray = new Array(numberOfRows).fill(0).map((x) => new Array(numberOfColumns));
+    var cells = Array.from(container.querySelectorAll('.cell'));
+    cells.forEach((item, i) => {
+        cellArray[parseInt(i/numberOfColumns)][i%numberOfColumns] = item;
+    });
+})
+function createGrid(container){
+    for (let i = 0; i < numberOfRows; i++){
+        for (let j = 0; j < numberOfColumns; j++){
+            let cell = document.createElement("div");
+            cell.className = "newcell";
+            if (parkingGrid[i][j] == 'P'){
+                cell.classList.add("parkablecell");
+                baseslots++;
+            }
+            else if (parkingGrid[i][j] == 'X') cell.classList.add("reservedcell");
+            else{
+                if (parkingGrid[i][j] != 'A') cell.innerText = parkingGrid[i][j];
+                else parkingGrid[i][j] = 'R';
+                cell.classList.add("roadcell");
+            }
+            cell.dataset.rownumber = i;
+            cell.dataset.columnnumber = j;
+            container.appendChild(cell);
+        }
+    }
+}
+function clearGrid(){
+    grid.innerHTML = `<div class="Loader">
+                        <div class="loading"></div>
+                    </div>`;
+}
+
+const buttons = document.querySelectorAll('.b');
+buttons.forEach(button => {
+    button.addEventListener('click', e => {
+        ++currentState;
+        alternateEnable(e.target.offsetParent,e.target, e.target.offsetParent.nextElementSibling);
+    });
+});
+
+function alternateEnable(obj1, b , obj2){
+    obj1.classList.remove('statebox-enable');
+    obj1.classList.add('statebox-done');
+    b.disabled = true;
+    if (currentState == 4){
+        document.querySelector('.Loader').style.display = "block";
+        let final = document.querySelector('.final');
+        final.disabled = false;
+        final.style.color = "#F4BB44";
+        finaliseParking();
+        return;
+    }
+    obj2.classList.add('statebox-enable');
+    obj2.childNodes[1].disabled = false;
+    return;
+}
+function finaliseParking(){
+    clearGrid();
+    let container = document.querySelector(".gridbox");
+    container.style.gridTemplateColumns = `${wb}px repeat(${numberOfColumns - 1}, ${wb}px)`;
+    container.style.gridTemplateRows = `${hb}px repeat(${numberOfRows - 1}, ${hb}px)`;
+    createGrid(container);
+}
+grid.addEventListener("mouseover", (e)=>{
+    let rn = parseInt(e.target.dataset.rownumber);
+    let cn = parseInt(e.target.dataset.columnnumber);
+    if (Number.isNaN(rn)|| Number.isNaN(cn)){
+        return;
+    }
+    switch(currentState){
+        case 0:
+            hoverends(rn,cn);
+            break;
+        case 1:
+            hoverends(rn,cn);
+            break;
+        default:
+            hoverCell(rn,cn);
+            break;
+    }
+});
+grid.addEventListener("mouseout", (e)=>{
+    let rn = e.target.dataset.rownumber;
+    let cn = e.target.dataset.columnnumber;
+    currentSelections.forEach((x) => {
+        x.classList.toggle("cellhover");
+    })
+    currentSelections = [];
+});
+grid.addEventListener('click', (e) => {
+    let rn = parseInt(e.target.dataset.rownumber);
+    let cn = parseInt(e.target.dataset.columnnumber);
+    if (Number.isNaN(rn)|| Number.isNaN(cn)){
+        return;
+    }
+    switch(currentState){
+        case 0:
+            markEntry(rn,cn);
+            break;
+        case 1:
+            markExits(rn,cn);
+            break;
+        case 2:
+            markReserved(rn,cn);
+            break;
+        case 3:
+            markParking(rn,cn);
+            break;
+    }
+})
+const r = [0, -1, 0, 1];
+const c = [-1, 0, 1, 0];
+window.addEventListener('keydown', e => {
+    if (currentState == 3 && clickedP){
+        let rn,cn;
+        switch(e.keyCode){
+            case 37:
+                rn = nrn + r[0];
+                cn = ncn + c[0];
+                break;
+            case 38:
+                rn = nrn + r[1];
+                cn = ncn + c[1];
+                break;
+            case 39:
+                rn = nrn + r[2];
+                cn = ncn + c[2];
+                break;
+            case 40:
+                rn = nrn + r[3];
+                cn = ncn + c[3];
+                break;
+        }
+        if (valid(rn, cn) || parkValid(rn, cn)) {
+            nrn = rn;
+            ncn = cn;
+            arrowMarkings();
+        }
+    }
+})
+function arrowMarkings(){
+    if (parkingGrid[nrn][ncn] == 'A') selectSlot(nrn, ncn);
+    else if (parkingGrid[nrn][ncn] == 'P') deselectSlot(nrn, ncn);
+    else return;
+}
+function valid(i,j){
+    return !(i < 0 || j < 0 || i >= numberOfRows || j >= numberOfColumns || parkingGrid[i][j] != 'A')
+}
+function parkValid(i, j){
+    return !(i < 0 || j < 0 || i >= numberOfRows || j >= numberOfColumns || parkingGrid[i][j] != 'P')
+}
+function hoverCell(rn, cn){
+    if (valid(rn, cn)){
+        cellArray[rn][cn].classList.add("cellhover");
+        currentSelections = [cellArray[rn][cn]];
+    }
+}
+
+function markEntry(rn, cn){
+    currentSelections.forEach((x) => {
+        x.classList.add("cellselect");
+        x.innerText = 'EN';
+        let xc = parseInt(x.dataset.rownumber);
+        let yc = parseInt(x.dataset.columnnumber);
+        parkingGrid[xc][yc] = 'EN';
+    });
+}
+function markExits(rn, cn){
+    currentSelections.forEach((x) => {
+        x.classList.add("cellselect");
+        x.innerText = 'EX';
+        let xc = parseInt(x.dataset.rownumber);
+        let yc = parseInt(x.dataset.columnnumber);
+        parkingGrid[xc][yc] = 'EX';
+    });
+}
+function markReserved(rn, cn){
+        if (!valid(rn, cn)) return;
+        let x = cellArray[rn][cn];
+        x.classList.add("cellselect");
+        x.innerText = 'X';
+        parkingGrid[rn][cn] = 'X';
+}
+function markParking(rn, cn){
+    if (parkingGrid[rn][cn] == 'A'){
+        selectSlot(rn, cn);
+        clickedP = 1;
+        nrn = rn;
+        ncn = cn;
+    }
+    else if (parkingGrid[rn][cn] == 'P'){
+        deselectSlot(rn, cn);
+        clickedP = 0;
+    }
+}
+function selectSlot(rn, cn){
+    parkingGrid[rn][cn] = 'P';
+    let x = cellArray[rn][cn];
+    x.classList.add("cellselect");
+    x.innerHTML = 'P';
+}
+function deselectSlot(rn, cn){
+    parkingGrid[rn][cn] = 'A';
+    let x = cellArray[rn][cn];
+    x.classList.remove("cellselect");
+    x.innerHTML = '';
+}
+function hoverends(rn, cn){
+    if (rn >= 2 && rn <=  numberOfRows - 3 && cn >=  2 && cn <= numberOfColumns - 3) return;
+
+    var neighbours;
+    if (rn < 2){
+        neighbours = [[0,cn], [1, cn], [0, cn+1], [1, cn+1]];
+        if (cn == numberOfColumns - 1) neighbours.push([0, cn-1], [1, cn - 1]);
+    }
+    else if (rn > numberOfRows - 3){
+        neighbours = [[numberOfRows - 2,cn], [numberOfRows - 1, cn], [numberOfRows - 2, cn+1], [numberOfRows - 1, cn+1]];
+        if (cn == numberOfColumns - 1) neighbours.push([numberOfRows - 1, cn-1], [numberOfRows - 2, cn - 1]);
+    }
+    else if (cn < 2){
+        neighbours = [[rn,0], [rn, 1], [rn + 1, 0], [rn + 1, 1]];
+    }
+    else if (cn > numberOfColumns - 3){
+        neighbours = [[rn, numberOfColumns - 2], [rn, numberOfColumns - 1], [rn + 1, numberOfColumns - 2], [rn + 1, numberOfColumns - 1]];
+    }
+    let selectedPoints = neighbours.filter((point) => valid(point[0], point[1]));
+    currentSelections = selectedPoints.map((point) => cellArray[point[0]][point[1]]);
+    currentSelections.forEach((x) => {
+        x.classList.toggle("cellhover");
+    });
+    return;
+}
+document.querySelector('.final').addEventListener('click', (e) => {
+    newLocationInfo.baseParkingModel = JSON.stringify(parkingGrid);
+    newLocationInfo.baseSlotNumber = baseslots;
+    db.ref(`parkingLocations/${newLocation}`).set(newLocationInfo);
+    db.ref(`locationsID/${newLocation}`).set(baseslots);
+    document.querySelector('.Loader').style.display = "block";
+    setTimeout(removeLoader, 1500);
+});
+function removeLoader(){
+    window.location.replace("index.html");
+}
+</script>
+
+</body>
+</html>
