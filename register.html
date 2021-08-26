@@ -235,12 +235,12 @@ body,html {
 
 <p class = "area"> Grid Size : 100 X 100 m<sup>2</sup>.</p>
 <script>
-const gridLength = window.sessionStorage.getItem('length') * 5;
-const gridBreadth = window.sessionStorage.getItem('breadth') * 5;
+const gridLength = parseInt(window.sessionStorage.getItem('length')) + 550;
+const gridBreadth = parseInt(window.sessionStorage.getItem('breadth')) + 700;
 const grid = document.querySelector(".gridbox");
 var gridHeight = grid.clientHeight;
 var gridWidth = grid.clientWidth;
-const numberOfRows = Math.floor(gridLength * 15 / gridHeight);
+const numberOfRows = Math.floor(gridLength * 12 / gridHeight);
 const numberOfColumns =  Math.floor(gridBreadth * 20 / gridWidth);
 const hb = parseInt(gridHeight/numberOfRows);
 const wb = parseInt(gridWidth/numberOfColumns);
@@ -254,7 +254,7 @@ var clickedP = 0;
 var nrn, ncn;
 var baseslots = 0;
 window.addEventListener("load", () => {
-    document.querySelector('.area').innerHTML = ` Grid Size : ${window.sessionStorage.getItem('length')} X ${window.sessionStorage.getItem('breadth')} m<sup>2</sup>.`
+    document.querySelector('.area').innerHTML = ` Grid Size : ${window.sessionStorage.getItem('length')} X ${window.sessionStorage.getItem('breadth')} m<sup>2</sup> (Scaled according to current window size)`
     newLocation = window.sessionStorage.getItem('location');
     newLocationInfo.owner = window.sessionStorage.getItem('name');
     newLocationInfo.email = window.sessionStorage.getItem('email');
